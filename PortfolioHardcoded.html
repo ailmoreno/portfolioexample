@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#1565C0; --primary-light:#E3F2FD; --ink:#1A1A1A; --mid:#555;
+  --muted:#999; --rule:#E8E8E8; --bg:#FAFAF8; --white:#FFFFFF; --yellow:#FFF9C4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+header{background:var(--white);border-bottom:3px solid var(--primary);padding:28px 48px 22px;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.06);}
+.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.04em;line-height:1;color:var(--ink);}
+h1 span{color:var(--primary);}
+
+/* Tab nav */
+.tab-nav{max-width:960px;margin:0 auto;padding:20px 48px 0;display:flex;gap:4px;}
+.tab-btn{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--mid);padding:8px 16px;border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s;}
+.tab-btn:hover{color:var(--ink);background:var(--white);}
+.tab-btn.active{color:var(--primary);background:var(--white);border-color:var(--rule);border-bottom-color:var(--white);position:relative;top:1px;}
+.tab-divider{border-bottom:1px solid var(--rule);max-width:960px;margin:0 auto 0;padding:0 48px;}
+
+/* Search */
+.search-wrap{display:flex;align-items:center;gap:10px;background:#F5F5F5;border:1.5px solid var(--rule);border-radius:8px;padding:8px 14px;width:260px;transition:border-color .2s,box-shadow .2s;}
+.search-wrap:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(21,101,192,0.08);background:var(--white);}
+.search-icon{font-size:14px;color:var(--muted);flex-shrink:0;}
+#search-input{border:none;background:transparent;outline:none;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink);width:100%;}
+#search-input::placeholder{color:#BBB;}
+#search-clear{background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted);padding:0;display:none;line-height:1;}
+#search-clear:hover{color:var(--primary);}
+
+/* Layout */
+.container{max-width:960px;margin:0 auto;padding:40px 48px 80px;display:flex;flex-direction:column;gap:24px;}
+.projects-row{display:flex;gap:24px;flex-wrap:wrap;}
+.project-box{flex:1;min-width:260px;background:var(--white);border:1px solid var(--rule);border-radius:16px;padding:20px;cursor:pointer;transition:box-shadow .2s;position:relative;}
+.project-box:hover{box-shadow:0 6px 18px rgba(0,0,0,0.08);}
+.project-header{font-weight:600;font-size:16px;color:var(--primary);margin-bottom:12px;}
+.project-body{display:none;flex-direction:column;gap:10px;margin-top:10px;}
+.project-body.open{display:flex;}
+.project-file{padding:8px 12px;background:var(--primary-light);border-radius:8px;font-size:13px;color:var(--ink);transition:background .15s;}
+.project-file:hover{background:#BBDEFB;}
+
+/* Typeform & CSV tab */
+.typeform-panel{max-width:960px;margin:0 auto;padding:40px 48px 80px;display:none;}
+.typeform-panel.active{display:block;}
+.tf-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.tf-header h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.04em;color:var(--ink);}
+.tf-table{width:100%;border-collapse:collapse;font-size:13px;}
+.tf-table th{text-align:left;padding:10px 14px;border-bottom:2px solid var(--rule);color:var(--muted);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;}
+.tf-table td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:middle;}
+.tf-table tr.data-row:hover td{background:var(--primary-light);}
+
+/* CSV Table */
+#csv-table th{background:var(--primary-light);}
+#csv-table th, #csv-table td{border:1px solid #ccc; padding:8px; text-align:left;}
+
+footer{text-align:center;padding:24px;font-size:10px;color:var(--muted);border-top:1px solid var(--rule);font-style:italic;}
+@media(max-width:700px){
+  .container{padding:24px 20px 60px;}
+  header{padding:20px 20px 16px;}h1{font-size:26px;}
+  .tab-nav{padding:16px 20px 0;}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <h1>Portfolio Test <span>:</span></h1>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+      <div class="search-wrap" id="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" type="text" placeholder="Search folders…" autocomplete="off">
+        <button id="search-clear" title="Clear">✕</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Tab navigation -->
+<div class="tab-nav">
+  <button class="tab-btn active" id="btn-drive" onclick="switchTab('drive')">📁 Projects</button>
+  <button class="tab-btn" id="btn-typeform" onclick="switchTab('typeform')">📋 Most recently submitted forms</button>
+  <button class="tab-btn" id="btn-csv" onclick="switchTab('csv')">📊 Excel Sheet</button>
+</div>
+<div class="tab-divider"></div>
+
+<!-- Projects tab -->
+<div id="tab-drive" class="container">
+  <div class="projects-row">
+    <div class="project-box" onclick="toggleProject(this)">
+      <div class="project-header">Project Folder 1</div>
+      <div class="project-body">
+        <div class="project-file">Important Documents</div>
+        <div class="project-file">Administration</div>
+      </div>
+    </div>
+    <div class="project-box" onclick="toggleProject(this)">
+      <div class="project-header">Project Folder 2</div>
+      <div class="project-body">
+        <div class="project-file">Important Documents</div>
+        <div class="project-file">Administration</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Typeform tab -->
+<div class="typeform-panel" id="tab-typeform">
+  <table class="tf-table">
+    <thead>
+      <tr>
+        <th>#</th><th>Name</th><th>Email</th><th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="data-row">
+        <td>1</td><td>Jane Doe</td><td>j.doe@gmail.com</td><td>I would like to schedule a consultation for my business</td>
+      </tr>
+      <tr class="data-row">
+        <td>2</td><td>John Smith</td><td>johnsmith@gmail.com</td><td>I saw this on instagram, and I would like to be part of this!</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- CSV tab -->
+<div class="typeform-panel" id="tab-csv">
+  <h2>Excel Sheet</h2>
+  <div style="overflow-x:auto;">
+    <table id="csv-table">
+      <thead>
+        <tr>
+          <th>Name</th><th>Email</th><th>URL</th><th>Source</th><th>Submission</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>John Smith</td><td>johnsmith@gmail.com</td><td>www.fakeurl.com</td><td>Instagram</td><td>2/13/2026</td>
+        </tr>
+        <tr>
+          <td>Jane Doe</td><td>j.doe@gmail.com</td><td>www.fakeurl.com</td><td>Facebook</td><td>3/20/2026</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>Auto-generated · Do not edit manually</footer>
+
+<script>
+// ── Tab switching ─────────────────────────────────────────────
+function switchTab(tab){
+  document.getElementById('tab-drive').style.display = tab==='drive'?'':'none';
+  document.getElementById('tab-typeform').style.display = tab==='typeform'?'block':'none';
+  document.getElementById('tab-csv').style.display = tab==='csv'?'block':'none';
+  document.getElementById('btn-drive').classList.toggle('active', tab==='drive');
+  document.getElementById('btn-typeform').classList.toggle('active', tab==='typeform');
+  document.getElementById('btn-csv').classList.toggle('active', tab==='csv');
+  document.getElementById('search-wrap').style.visibility = tab==='drive'?'visible':'hidden';
+}
+
+// ── Project expand/collapse ───────────────────────────────
+function toggleProject(el){
+  el.querySelector('.project-body').classList.toggle('open');
+}
+</script>
+</body>
+</html>
